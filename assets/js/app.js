@@ -150,6 +150,21 @@
   function rollNumber(state, value) {
     const old = state.countNode;
     const wrap = old.parentNode;
+
+    // 连点保护：上一轮动画还没结束就再次改值时，先清掉残留节点与动画，
+    // 否则两轮动画各自完成后会留下旧数字，出现「2 和 1」两个数字叠在一张卡上
+    Array.prototype.forEach.call(wrap.querySelectorAll(".card__num"), function (node) {
+      if (node !== old) node.remove();
+    });
+    if (old.getAnimations) old.getAnimations().forEach(function (a) { a.cancel(); });
+    old.classList.remove("is-incoming");
+    old.style.position = "";
+    old.style.left = "";
+    old.style.top = "";
+    old.style.transform = "";
+    old.style.opacity = "";
+    wrap.style.width = "";
+
     const next = document.createElement("span");
     next.className = "card__num is-incoming";
     next.textContent = value;
@@ -173,6 +188,7 @@
     );
 
     incoming.onfinish = function () {
+      if (!next.parentNode) return; // 本轮已被新一轮滚动取代，不再改动 DOM
       if (old.parentNode) old.remove();
       next.classList.remove("is-incoming");
       next.style.position = "";
