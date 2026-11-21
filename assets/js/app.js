@@ -15,6 +15,10 @@
 
   const SUFFIX = /(壮族自治区|回族自治区|维吾尔自治区|特别行政区|自治区|省|市)$/;
 
+  /** 搜索命中后的演示配额区间 */
+  const SEARCH_MIN = 4;
+  const SEARCH_MAX = 8;
+
   const MIN_QUOTA = 1;
   const MAX_QUOTA = 10;
 
@@ -54,9 +58,9 @@
     return "2.5s";
   }
 
-  /** 状态：{ name, count, node, countNode, tagNode } */
+  /** 状态：{ name, count, node, countNode, tagNode, locked } */
   const states = REGIONS.map(function (name) {
-    return { name: name, count: seedQuota(), node: null, countNode: null, tagNode: null };
+    return { name: name, count: seedQuota(), node: null, countNode: null, tagNode: null, locked: false };
   });
 
   /* 按紧急程度排序，让"告急"的省份自然浮到前面 */
@@ -194,8 +198,9 @@
 
   /* ---------------- 动态更新：模拟"名额被抢占" ---------------- */
   function tick() {
-    const pool = states.filter(function (s) { return s.count > MIN_QUOTA; });
-    const floor = states.filter(function (s) { return s.count <= MIN_QUOTA; });
+    // 已查询过的省份由搜索点击驱动，不参与随机涨落
+    const pool = states.filter(function (s) { return !s.locked && s.count > MIN_QUOTA; });
+    const floor = states.filter(function (s) { return !s.locked && s.count <= MIN_QUOTA; });
 
     // 少量"补放"：让已经见底的省份偶尔回补，页面不会长期全停在 1
     if (floor.length && Math.random() < 0.22) {
@@ -274,6 +279,17 @@
 
     hit.node.classList.add("is-found");
     hit.node.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // 首次命中：配额落在 4–8；之后每次再搜索：逐个递减，减到 1 后保持不变
+    if (!hit.locked) {
+      hit.locked = true;
+      setCount(hit, rand(SEARCH_MIN, SEARCH_MAX));
+      shake(hit);
+    } else if (hit.count > MIN_QUOTA) {
+      setCount(hit, hit.count - 1);
+      shake(hit);
+    }
+
     hintEl.textContent = hit.name + "：当前剩余 " + hit.count + " 个名额";
     hintEl.hidden = false;
   }
