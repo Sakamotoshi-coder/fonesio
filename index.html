@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fonesio · 销售推广配额查询</title>
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="shell topbar__inner">
+    <a class="brand" href="#">
+      <img class="brand__logo" src="assets/img/logo.png" alt="Fonesio 风意逍" />
+    </a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <svg class="hero__waves" viewBox="0 0 1440 520" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 300 C 220 200 380 380 640 300 C 900 220 1080 360 1440 250 L1440 520 L0 520 Z" fill="rgba(255,255,255,.10)"/>
+      <path d="M0 380 C 260 300 420 450 700 370 C 980 290 1180 420 1440 340 L1440 520 L0 520 Z" fill="rgba(255,255,255,.08)"/>
+    </svg>
+    <div class="shell hero__inner">
+      <p class="hero__eyebrow">数据实时同步 · 每 3 秒更新</p>
+      <h1 class="hero__title">全国各省份配额余量实时查询</h1>
+
+      <form class="search" id="search" role="search" autocomplete="off">
+        <span class="search__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="24" height="24"><circle cx="10.5" cy="10.5" r="6.6" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M15.6 15.6 L21 21" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        </span>
+        <input class="search__field" id="searchField" type="search" placeholder="请输入省份名称进行查询" aria-label="请输入省份名称" />
+        <button class="search__btn" type="submit">搜索</button>
+      </form>
+      <p class="hero__hint" id="searchHint" hidden></p>
+    </div>
+  </section>
+
+  <section class="board">
+    <div class="shell">
+      <div class="board__head">
+        <h2 class="board__title">各省剩余配额</h2>
+        <p class="board__meta"><span class="pulse" aria-hidden="true"></span>实时剩余名额，先到先得</p>
+      </div>
+      <div class="cards" id="cards" aria-live="polite"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="shell footer__inner">
+    <p>© 2026 Fonesio · 配额数据仅供推广参考</p>
+    <p class="footer__note">名额每小时随签约情况动态调整</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<button class="to-top" id="toTop" type="button" aria-label="回到顶部">
+  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+    <path d="M12 19V6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M5.8 12.2 L12 6 L18.2 12.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>
