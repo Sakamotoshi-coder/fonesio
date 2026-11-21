@@ -1,5 +1,9 @@
 # Fonesio · 销售推广配额查询（基础版）
 
+**线上地址：** https://sakamotoshi-coder.github.io/fonesio/ ｜ **仓库：** https://github.com/Sakamotoshi-coder/fonesio
+
+![预览](preview.png)
+
 静态单页，无构建、无依赖。视觉取自设计方案「第二排第一个 · 红橙促销风」。
 
 ## 运行
