@@ -65,15 +65,29 @@
     card.className = "card";
     card.dataset.name = state.name;
 
+    // 左：定位图标 + 地区名
+    const idBox = document.createElement("span");
+    idBox.className = "card__id";
+    const pin = document.createElement("span");
+    pin.className = "card__pin";
+    pin.innerHTML =
+      '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">' +
+      '<path d="M12 21s7-5.6 7-11.2A7 7 0 1 0 5 9.8C5 15.4 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>' +
+      '<circle cx="12" cy="9.8" r="2.4" fill="currentColor"/></svg>';
     const name = document.createElement("h3");
     name.className = "card__name";
     name.textContent = state.name;
+    idBox.appendChild(pin);
+    idBox.appendChild(name);
 
-    const label = document.createElement("p");
+    // 中：剩余名额 + DIN 数字
+    const quota = document.createElement("span");
+    quota.className = "card__quota";
+    const label = document.createElement("span");
     label.className = "card__label";
     label.textContent = "剩余名额";
 
-    const count = document.createElement("p");
+    const count = document.createElement("span");
     count.className = "card__count";
     const numWrap = document.createElement("span");
     numWrap.className = "card__num-wrap";
@@ -86,14 +100,23 @@
     unit.textContent = "个";
     count.appendChild(numWrap);
     count.appendChild(unit);
+    quota.appendChild(label);
+    quota.appendChild(count);
 
     const tag = document.createElement("span");
     tag.className = "tag";
 
-    card.appendChild(name);
-    card.appendChild(label);
-    card.appendChild(count);
+    // 右：箭头
+    const chevron = document.createElement("span");
+    chevron.className = "card__chevron";
+    chevron.innerHTML =
+      '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">' +
+      '<path d="M9 5.5 L15.5 12 L9 18.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+    card.appendChild(idBox);
+    card.appendChild(quota);
     card.appendChild(tag);
+    card.appendChild(chevron);
 
     state.node = card;
     state.countNode = num;
