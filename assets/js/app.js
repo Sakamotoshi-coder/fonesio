@@ -147,6 +147,24 @@
   }
 
   /** 数字切换：旧值向上滑出、新值从下方滑入（老虎机式） */
+  /** 兜底：无论动画是否正常结束（后台标签页、动画被暂停等），
+   *  最终只保留一个数字节点，避免出现两个数字叠在一张卡上 */
+  function settleNumbers(state) {
+    if (!state.countNode) return;
+    const wrap = state.countNode.parentNode;
+    if (!wrap) return;
+    Array.prototype.forEach.call(wrap.querySelectorAll(".card__num"), function (node) {
+      if (node !== state.countNode) node.remove();
+    });
+    state.countNode.classList.remove("is-incoming");
+    state.countNode.style.position = "";
+    state.countNode.style.left = "";
+    state.countNode.style.top = "";
+    state.countNode.style.transform = "";
+    state.countNode.style.opacity = "";
+    wrap.style.width = "";
+  }
+
   function rollNumber(state, value) {
     const old = state.countNode;
     const wrap = old.parentNode;
@@ -174,6 +192,9 @@
     const width = Math.max(old.getBoundingClientRect().width, next.scrollWidth);
     wrap.style.width = width + "px";
 
+    // 立刻接管：之后无论动画是否结束，state 指向的都是最新值
+    state.countNode = next;
+
     const EASE = "cubic-bezier(.22, .61, .36, 1)";
     const DURATION = 340;
 
@@ -195,12 +216,15 @@
       next.style.left = "";
       next.style.top = "";
       wrap.style.width = "";
-      state.countNode = next;
     };
+
+    clearTimeout(state.rollTimer);
+    state.rollTimer = setTimeout(function () { settleNumbers(state); }, DURATION + 120);
   }
 
   /** 统一入口：改数值 + 滚动数字 + 刷新状态标签 */
   function setCount(state, value) {
+    settleNumbers(state);
     state.count = value;
     rollNumber(state, value);
     paint(state);
