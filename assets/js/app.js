@@ -37,10 +37,12 @@
   }
 
   function tagFor(count) {
-    if (count <= 3) return { text: "紧急！仅剩 " + count + " 个", cls: "tag--urgent" };
-    if (count <= 6) return { text: "名额紧张", cls: "tag--tight" };
-    if (count <= 9) return { text: "即将告罄", cls: "tag--soon" };
-    return { text: "名额有限", cls: "tag--soon" };
+    if (count <= 3) {
+      return { long: "紧急！仅剩 " + count + " 个", short: "告急", cls: "tag--urgent" };
+    }
+    if (count <= 6) return { long: "名额紧张", short: "紧张", cls: "tag--tight" };
+    if (count <= 9) return { long: "即将告罄", short: "告罄", cls: "tag--soon" };
+    return { long: "名额有限", short: "有限", cls: "tag--soon" };
   }
 
   /** 告罄程度越高，标签流光越快（秒数越小） */
@@ -105,6 +107,12 @@
 
     const tag = document.createElement("span");
     tag.className = "tag";
+    const tagLong = document.createElement("span");
+    tagLong.className = "tag__long";
+    const tagShort = document.createElement("span");
+    tagShort.className = "tag__short";
+    tag.appendChild(tagLong);
+    tag.appendChild(tagShort);
 
     // 右：箭头
     const chevron = document.createElement("span");
@@ -128,7 +136,8 @@
   function paint(state) {
     if (!state.countNode) return;
     const tag = tagFor(state.count);
-    state.tagNode.textContent = tag.text;
+    state.tagNode.querySelector(".tag__long").textContent = tag.long;
+    state.tagNode.querySelector(".tag__short").textContent = tag.short;
     state.tagNode.className = "tag " + tag.cls;
     state.tagNode.style.setProperty("--flow-dur", flowDuration(state.count));
   }
